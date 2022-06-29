@@ -22,3 +22,8 @@ spring:
 logging:
   level:
     jwt.tutorial: DEBUG
+
+jwt:
+  header: Authorization
+  secret: YnJldHRhaG4tand0LXR1dG9yaWFsLXNlY3JldC1rZXktZ2VuZXJhdGUtYmFzZTY0LWVuY29kaW5nLXdlLW5lZWQtbW9yZS10aGFuLTUxMi1iaXQtZm9yLUhTNTEyLWFsZ29yaXRobQ==
+  token-validity-in-seconds: 86400
