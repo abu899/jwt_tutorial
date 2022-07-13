@@ -47,4 +47,8 @@ public class UserService {
     public Optional<User> getMyUserWithAuthorities() {
         return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUsername);
     }
+
+    public User getUserByName(String username) {
+        return userRepository.findByUsername(username);
+    }
 }

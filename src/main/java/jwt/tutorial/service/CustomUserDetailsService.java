@@ -2,6 +2,7 @@ package jwt.tutorial.service;
 
 import jwt.tutorial.entity.User;
 import jwt.tutorial.repository.UserRepository;
+import jwt.tutorial.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,9 +23,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String username) {
-        return repository.findOneWithAuthoritiesByUsername(username)
+        List<String> domains = SecurityUtil.getDomains(username);
+        return repository.findById(Long.valueOf(domains.get(0)))
                 .map(user -> createUser(username, user))
                 .orElseThrow(() -> new UsernameNotFoundException("user name not found in DB"));
+//        return repository.findOneWithAuthoritiesByUsername(username)
+//                .map(user -> createUser(username, user))
+//                .orElseThrow(() -> new UsernameNotFoundException("user name not found in DB"));
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
@@ -35,7 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+        return new org.springframework.security.core.userdetails.User(username,
                 user.getPassword(),
                 grantedAuthorities);
     }
